@@ -15,8 +15,22 @@ import {CheckinRegisterModule} from './checkin_register/checkin_register.module'
 import {AuthorizedPersonModule} from './authorized_person/authorized_person.module';
 
 @Module({
-    imports: [UsersModule, KidsModule, RolesModule, ParentsModule, CheckinRegisterModule, AuthorizedPersonModule],
-    controllers: [AppController, KidsController, UsersController, RolesController, AuthorizedPersonController, CheckinRegisterController, ParentsController],
+    imports: [
+        UsersModule,
+        KidsModule,
+        RolesModule,
+        ParentsModule,
+        CheckinRegisterModule,
+        AuthorizedPersonModule
+    ],
+    controllers: [
+        AppController,
+        KidsController,
+        UsersController,
+        RolesController,
+        AuthorizedPersonController,
+        CheckinRegisterController,
+        ParentsController],
     providers: [AppService],
 })
 export class AppModule {

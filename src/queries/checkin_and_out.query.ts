@@ -1,6 +1,6 @@
 import {Op} from 'sequelize';
 import {CheckInAndOutModel} from '../models/checkin_and_out.model';
-import {RegisterModel} from "../models/kids.model";
+import {KidsModel} from "../models/kids.model";
 import moment from "moment";
 
 export class CheckinAndOutQuery {

@@ -1,12 +1,11 @@
 import {Response, Request} from 'express'
-import {JsonResponse} from "../enums/json-response";
 import QRCode from 'qrcode';
 import {File} from '../helpers/files';
 import * as ExcelJS from 'exceljs'
+import { v4 as uuidv4 } from 'uuid';
 
 /* Queries */
 import {KidsQuery} from '../queries/kids.query';
-import {KidsModel} from "../models/kids.model";
 
 export class RegisterController {
     static file: File = new File()
@@ -106,8 +105,26 @@ export class RegisterController {
     }
 
     public async register(req: Request, res: Response) {
-
-        const data = req.body;
+        const body = req.body;
+        const data = {
+            uuid: uuidv4(),
+            name: body.name,
+            lastname: body.lastname,
+            birthday: body.birthday,
+            age: body.age,
+            address: body.address,
+            allergy: body.allergy,
+            allergy_description: body.allergy_description,
+            medical_condition: body.medical_condition,
+            medical_condition_description: body.medical_condition_description,
+            mdf_member: body.mdf_member,
+            another_church: body.another_church,
+            another_church_name: body.another_church_name,
+            invited: body.invited,
+            invite_name: body.invite_name,
+            qr_code: '',
+            terms_condition: body.terms_condition ? 1 : 0
+        };
 
         const kid = await RegisterController.kidsQuery.register(data);
 

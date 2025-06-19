@@ -6,10 +6,17 @@ import { v4 as uuidv4 } from 'uuid';
 
 /* Queries */
 import {KidsQuery} from '../queries/kids.query';
+import {ParentsQueries} from "../queries/parents.query";
+import {Validate} from "../helpers/validate";
+import {JsonResponse} from "../enums/json-response";
+import {AuthorizedQueries} from "../queries/authorized.query";
 
 export class RegisterController {
     static file: File = new File()
     static kidsQuery: KidsQuery = new KidsQuery();
+    static parentsQueries: ParentsQueries = new ParentsQueries();
+    static authorizedQueries: AuthorizedQueries = new AuthorizedQueries();
+    static validate: Validate = new Validate();
 
     public async show(req: Request, res: Response) {
         const registerId = req.params.id;
@@ -75,6 +82,24 @@ export class RegisterController {
         });
     }
 
+    public async finder(req: Request, res: Response) {
+        const body = req.body;
+
+        const register = await RegisterController.kidsQuery.find(body.name);
+
+        if (!register.ok || !register.register) {
+            return res.status(400).json({
+                ok: false,
+                message: 'No se encontro el registro solicitado'
+            })
+        }
+
+        return res.status(200).json({
+            ok: true,
+            register: register.register,
+        });
+    }
+
     public async getQRCodeImage(req: Request, res: Response) {
         const registerId = req.params.id;
 
@@ -105,8 +130,13 @@ export class RegisterController {
     }
 
     public async register(req: Request, res: Response) {
+        let errors = [];
         const body = req.body;
-        const data = {
+        let parents = (req.body.parents) ? req.body.parents : null
+        let authorizedPersons = (req.body.authorized_person) ? req.body.authorized_person : null
+
+        // 1. Validar información
+        const kidData = {
             uuid: uuidv4(),
             name: body.name,
             lastname: body.lastname,
@@ -125,14 +155,81 @@ export class RegisterController {
             qr_code: '',
             terms_condition: body.terms_condition ? 1 : 0
         };
+        let validateKidInfo = RegisterController.validate.kid(kidData);
 
-        const kid = await RegisterController.kidsQuery.register(data);
+        if (validateKidInfo.ok == false) {
+            return res.status(JsonResponse.BAD_REQUEST).json({
+                ok: false,
+                errors: validateKidInfo.errors
+            })
+        }
+
+        for (const parent of parents) {
+            let validateParentInfo = RegisterController.validate.parent(parent)
+
+            if (validateParentInfo.ok == false) {
+                return res.status(JsonResponse.BAD_REQUEST).json({
+                    ok: false,
+                    errors: validateParentInfo.errors
+                })
+            }
+        }
+
+        for (const authorizedPerson of authorizedPersons) {
+            let validateAuthorizedInfo = RegisterController.validate.authorized(authorizedPerson)
+
+            if (validateAuthorizedInfo.ok == false) {
+                return res.status(JsonResponse.BAD_REQUEST).json({
+                    ok: false,
+                    errors: validateAuthorizedInfo.errors
+                })
+            }
+        }
+
+        // 2. Se realiza el registro del niño
+        const kid = await RegisterController.kidsQuery.register(kidData);
 
         if (!kid.ok) {
-            return res.status(400).json({
+            return res.status(JsonResponse.BAD_REQUEST).json({
                 ok: false,
-                message: 'Ocurrio un error a la hora realizar el registro'
+                message: [{ message: 'Existen problemas al momento de registrar el niño.' }]
             })
+        }
+
+        // 3. Se realizar registro de padres
+
+        for (const parent of parents) {
+            const parentData = {
+                kid_id: kid.kid.id,
+                uuid: uuidv4(),
+                full_name: parent.full_name,
+                cellphone: parent.cellphone,
+                type: parent.type.toUpperCase(),
+            }
+            const parentResult = await RegisterController.parentsQueries.register(parentData);
+            if (!parentResult.ok) {
+                return res.status(JsonResponse.BAD_REQUEST).json({
+                    ok: false,
+                    message: [{ message: 'Existen problemas al momento de registrar a los padres' }]
+                });
+            }
+        }
+
+        for (const authorized of body.authorized_person) {
+            const authorizedData = {
+                kid_id: kid.kid.id,
+                uuid: uuidv4(),
+                full_name: authorized.full_name,
+                cellphone: authorized.cellphone,
+                relationship: authorized.relationship,
+            }
+            const authRes = await RegisterController.authorizedQueries.register(authorizedData);
+            if (!authRes.ok) {
+                return res.status(JsonResponse.BAD_REQUEST).json({
+                    ok: false,
+                    message: [{ message: 'Existen problemas al momento de registrar a las personas autorizadas' }]
+                });
+            }
         }
 
         const registerId = kid.kid ? kid.kid.id : null;
@@ -143,9 +240,9 @@ export class RegisterController {
         }).then(async (url) => {
             const imageUpload = await RegisterController.file.converBase64ToJpg(url);
             if (!imageUpload.ok) {
-                return res.status(400).json({
+                return res.status(JsonResponse.BAD_REQUEST).json({
                     ok: false,
-                    message: 'Existen problemas al guardar el archivo QR. Contacte a soporte.',
+                    message: [{ message: 'Existen problemas al guardar el archivo QR. Contacte a soporte.' }],
                 })
             }
 
@@ -156,22 +253,21 @@ export class RegisterController {
             const updatedRegister = await RegisterController.kidsQuery.update(registerId, dataUpdate);
 
             if (!updatedRegister.ok) {
-                return res.status(400).json({
+                return res.status(JsonResponse.BAD_REQUEST).json({
                     ok: false,
-                    message: 'Existen problemas al actualizar el registro.',
+                    message: [{ message: 'Existen problemas al actualizar el registro.'}],
                 })
             }
 
-            return res.status(200).json({
+            return res.status(JsonResponse.OK).json({
                 ok: true,
                 message: 'El registro se realizo con exito.',
                 register: kid.kid,
             });
         }).catch(err => {
-            console.log(err);
-            return res.status(400).json({
+            return res.status(JsonResponse.BAD_REQUEST).json({
                 ok: false,
-                message: 'Ocurrio un error a la hora realizar el registro. Intente nuevamente :)'
+                message: [{ message: 'Ocurrio un error a la hora realizar el registro. Intente nuevamente.'}]
             })
         });
     }

@@ -2,8 +2,9 @@ import {Op} from 'sequelize';
 import {KidsModel} from '../models/kids.model';
 import {CheckInAndOutModel} from "../models/checkin_and_out.model";
 import moment from "moment";
+import {ParentsModel} from "../models/parents.model";
 
-export class KidsQuery {
+export class ParentsQueries {
 
     public async find(name: any) {
         try {
@@ -52,10 +53,10 @@ export class KidsQuery {
 
     public async register(data: any) {
         try {
-            const kid = await KidsModel.create(data);
-            return {ok: true, kid}
+            const parent = await ParentsModel.create(data);
+            return {ok: true, parent}
         } catch (e) {
-            console.log(e);
+            console.log('Error al registrar:', e);
             return {ok: false}
         }
     }

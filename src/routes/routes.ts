@@ -22,7 +22,7 @@ export class Routes {
 
         app.route('/api/register').get(this.registerController.index);
         app.route('/api/register/:id').get(this.registerController.show);
-        app.route('/api/register/qr/:id').get(this.registerController.getQRCodeImage);
+        // app.route('/api/register/qr/:id').get(this.registerController.getQRCodeImage);
         app.route('/api/register/confirmation/:id').get(this.registerController.confirmation);
 
         /* Routes for check in and out*/
@@ -30,7 +30,7 @@ export class Routes {
         app.route('/api/checkinAndOut/index/:register_id').get(this.checkinAndOutController.indexByRegister);
         app.route('/api/checkinAndOut/:id').get(this.checkinAndOutController.showByRegister);
         app.route('/api/checkinAndOut/checkin').post(this.checkinAndOutController.checkin);
-        app.route('/api/checkinAndOut/checkout/:id').put(this.checkinAndOutController.checkout);
+        // app.route('/api/checkinAndOut/checkout/:id').put(this.checkinAndOutController.checkout);
 
         /* Reportes de niños por edades */
         // app.route('/api/reports/:age').get(this.registerController.excelByAge);

@@ -24,7 +24,7 @@ export class Routes {
         app.route('/api/finder').post(this.registerController.finder); // pendiente
 
         app.route('/api/register').get(this.registerController.index);
-        app.route('/api/register/qr/:id').get(this.registerController.getQRCodeImage);
+        // app.route('/api/register/qr/:id').get(this.registerController.getQRCodeImage);
         app.route('/api/register/confirmation/:id').get(this.registerController.confirmation);
 
         /* Routes for check in and out*/

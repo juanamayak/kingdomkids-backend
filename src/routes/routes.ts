@@ -5,8 +5,6 @@ import { RegisterController } from '../controllers/register.controller';
 import { CheckinAndOutController } from '../controllers/checkin_and_out.controller';
 import { SessionController } from '../controllers/session.controller';
 
-/* Middlewares */
-import { validateCreate } from '../validators/register.validator';
 
 export class Routes {
     public registerController: RegisterController = new RegisterController();
@@ -20,11 +18,10 @@ export class Routes {
         /* Routes for kids register */
         app.route('/api/register').post(this.registerController.register);
         app.route('/api/register/:id').get(this.registerController.show);
-        // app.route('/api/register/qr/:id').get(this.registerController.getQRCodeImage);
         app.route('/api/finder').post(this.registerController.finder); // pendiente
 
         app.route('/api/register').get(this.registerController.index);
-        // app.route('/api/register/qr/:id').get(this.registerController.getQRCodeImage);
+        app.route('/api/register/qr/:id').get(this.registerController.getQRCodeImage);
         app.route('/api/register/confirmation/:id').get(this.registerController.confirmation);
 
         /* Routes for check in and out*/

@@ -89,6 +89,9 @@ export class Validate {
         let full_name: string = data.full_name == null || validator.isEmpty(data.full_name) ?
             errors.push({ message: 'Favor de proporcionar el nombre correctamente' }) : data.full_name
 
+        let email: string = data.email == null || validator.isEmpty(data.email) ?
+            errors.push({ message: 'Favor de proporcionar el email correctamente' }) : data.email
+
         let cellphone: string = data.cellphone == null || validator.isEmpty(data.cellphone) ?
             errors.push({ message: 'Favor de proporcionar el número celular correctamente' }) : data.cellphone
 

@@ -54,8 +54,8 @@ export class AuthorizedQueries {
 
     public async register(data: any) {
         try {
-            const parent = await AuthorizedModel.create(data);
-            return {ok: true, parent}
+            const authorized = await AuthorizedModel.create(data);
+            return {ok: true, authorized}
         } catch (e) {
             console.log(e);
             return {ok: false}

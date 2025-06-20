@@ -19,23 +19,23 @@ AuthorizedModel.init({
     },
     kid_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     uuid: {
         type: DataTypes.STRING(150),
-        allowNull: false,
+        allowNull: true,
     },
     full_name: {
         type: DataTypes.STRING(150),
-        allowNull: false,
+        allowNull: true,
     },
     cellphone: {
         type: DataTypes.STRING(50),
-        allowNull: false,
+        allowNull: true,
     },
     relationship: {
         type: DataTypes.STRING(50),
-        allowNull: false,
+        allowNull: true,
     }
 }, {
     sequelize: database,

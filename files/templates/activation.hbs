@@ -1,0 +1,56 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div style="background-color: #e2e8f0; font-family: Arial, sans-serif;">
+    <div style="margin: auto; display: block; width: 100%; max-width: 42rem; color:#410099;">
+        <!-- Imagen inicial -->
+        <div style="max-width: 100%; background-color: #008ead; padding: 0.75rem; text-align: center; color: white;">
+            <!--<img style="margin: auto; display:block; width: 7rem;" src="https://floreriaenvios.com/public/logotipo.png">-->
+            <h1>KINGDOM KIDS 2025</h1>
+        </div>
+        <!-- Imagen inicial -->
+
+        <!-- Contenido principal -->
+        <div style="max-width: 100%; background-color: #ffffff; padding: 5%;">
+            <h1 style="font-weight: bold; font-size: 1.25rem;">¡Registro Exitoso!</h1>
+            <p>Hola, {{ data.kid.name }} {{ data.kid.lastname }}, tu registro se ha realizado con éxito y ya estás listo para
+                disfrutar del
+                mejor tiempo en Escuela de Verano "Kingdom Kids 2025".</p>
+            <p>
+                Este es el Código QR para poder registrar tu entrada cada día durante el evento:
+            </p>
+
+            <img src="{{data.qrCode}}" alt="Código QR">
+
+            <p>Al haber finalizado tu registro, confirmas que has leído y aceptado los Términos aplicables al evento.
+                Para consultarlos, por favor visita nuestro sitio web o contáctanos a través de los medios indicados. </p>
+
+            <p>Gracias por tu registro.</p>
+            <p style="margin-bottom: 3.125rem;"><i>Atentamente:</i><br>El equipo de Kingdom Kids</p>
+
+        </div>
+        <!-- Contenido principal -->
+
+        <!-- Footer -->
+        <div style="max-width: 100%; background-color: #1D1D1B; padding: 1.25rem; text-align: center; color: white;">
+            <div>
+                <h4 style="font-size: 1rem; font-weight: 600;">Soporte</h4>
+                <p>
+                    Comunícate con nosotros por los siguientes medios:<br>
+                    Correo: <a style="color: #C2E76B;" href="mailto:contacto@mundodefeplaya.org">contacto@mundodefeplaya.org</a><br>
+                    Whatsapp: <a style="color: #C2E76B;" href="https://wa.me/9841531159">+52 984 153 11 59</a><br>
+                </p>
+            </div>
+            <p>
+                &copy; Mundo de Fe Playa del Carmen. Todos los derechos reservados.
+            </p>
+        </div>
+        <!-- Footer -->
+    </div>
+</div>
+</body>
+</html>

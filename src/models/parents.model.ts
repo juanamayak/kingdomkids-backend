@@ -6,6 +6,7 @@ export class ParentsModel extends Model {
     public kid_id: number;
     public uuid!: string;
     public full_name!: string;
+    public email!: string;
     public cellphone!: string;
     public type!: string;
 }
@@ -26,6 +27,10 @@ ParentsModel.init({
         allowNull: false,
     },
     full_name: {
+        type: DataTypes.STRING(150),
+        allowNull: false,
+    },
+    email: {
         type: DataTypes.STRING(150),
         allowNull: false,
     },

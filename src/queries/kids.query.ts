@@ -62,7 +62,7 @@ export class KidsQuery {
 
     public async update(registerId: any, data: any) {
         try {
-            const register = await KidsModel.update(
+            const kid = await KidsModel.update(
                 data,
                 {
                     where: {
@@ -70,7 +70,7 @@ export class KidsQuery {
                     }
                 }
             );
-            return {ok: true}
+            return {ok: true, kid}
         } catch (e) {
             console.log(e);
             return {ok: false}

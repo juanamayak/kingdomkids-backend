@@ -10,9 +10,11 @@ import {ParentsQueries} from "../queries/parents.query";
 import {Validate} from "../helpers/validate";
 import {JsonResponse} from "../enums/json-response";
 import {AuthorizedQueries} from "../queries/authorized.query";
+import {Mailer} from "../helpers/mailer";
 
 export class RegisterController {
     static file: File = new File()
+    static mailer: Mailer = new Mailer();
     static kidsQuery: KidsQuery = new KidsQuery();
     static parentsQueries: ParentsQueries = new ParentsQueries();
     static authorizedQueries: AuthorizedQueries = new AuthorizedQueries();
@@ -164,26 +166,22 @@ export class RegisterController {
             })
         }
 
-        for (const parent of parents) {
-            let validateParentInfo = RegisterController.validate.parent(parent)
+        if (parents && parents.length >= 1) {
+            for (const parent of parents) {
+                let validateParentInfo = RegisterController.validate.parent(parent)
 
-            if (validateParentInfo.ok == false) {
-                return res.status(JsonResponse.BAD_REQUEST).json({
-                    ok: false,
-                    errors: validateParentInfo.errors
-                })
+                if (validateParentInfo.ok == false) {
+                    return res.status(JsonResponse.BAD_REQUEST).json({
+                        ok: false,
+                        errors: validateParentInfo.errors
+                    })
+                }
             }
-        }
-
-        for (const authorizedPerson of authorizedPersons) {
-            let validateAuthorizedInfo = RegisterController.validate.authorized(authorizedPerson)
-
-            if (validateAuthorizedInfo.ok == false) {
-                return res.status(JsonResponse.BAD_REQUEST).json({
-                    ok: false,
-                    errors: validateAuthorizedInfo.errors
-                })
-            }
+        } else {
+            return res.status(JsonResponse.BAD_REQUEST).json({
+                ok: false,
+                errors: [{message: 'La información de los padres es obligatorio. Revisa la información e intenta nuevamente.'}]
+            })
         }
 
         // 2. Se realiza el registro del niño
@@ -203,6 +201,7 @@ export class RegisterController {
                 kid_id: kid.kid.id,
                 uuid: uuidv4(),
                 full_name: parent.full_name,
+                email: parent.email,
                 cellphone: parent.cellphone,
                 type: parent.type.toUpperCase(),
             }
@@ -216,19 +215,21 @@ export class RegisterController {
         }
 
         for (const authorized of body.authorized_person) {
-            const authorizedData = {
-                kid_id: kid.kid.id,
-                uuid: uuidv4(),
-                full_name: authorized.full_name,
-                cellphone: authorized.cellphone,
-                relationship: authorized.relationship,
-            }
-            const authRes = await RegisterController.authorizedQueries.register(authorizedData);
-            if (!authRes.ok) {
-                return res.status(JsonResponse.BAD_REQUEST).json({
-                    ok: false,
-                    message: [{ message: 'Existen problemas al momento de registrar a las personas autorizadas' }]
-                });
+            if((authorized.full_name != '' || authorized.cellphone != '' || authorized.relationship != '')) {
+                const authorizedData = {
+                    kid_id: kid.kid.id,
+                    uuid: uuidv4(),
+                    full_name: authorized.full_name,
+                    cellphone: authorized.cellphone,
+                    relationship: authorized.relationship,
+                }
+                const authRes = await RegisterController.authorizedQueries.register(authorizedData);
+                if (!authRes.ok) {
+                    return res.status(JsonResponse.BAD_REQUEST).json({
+                        ok: false,
+                        message: [{ message: 'Existen problemas al momento de registrar a las personas autorizadas' }]
+                    });
+                }
             }
         }
 
@@ -250,13 +251,23 @@ export class RegisterController {
                 qr_code: imageUpload.image
             }
 
-            const updatedRegister = await RegisterController.kidsQuery.update(registerId, dataUpdate);
+            const updatedKidResult = await RegisterController.kidsQuery.update(registerId, dataUpdate);
 
-            if (!updatedRegister.ok) {
+            if (!updatedKidResult.ok) {
                 return res.status(JsonResponse.BAD_REQUEST).json({
                     ok: false,
                     message: [{ message: 'Existen problemas al actualizar el registro.'}],
-                })
+                });
+            }
+
+            for (const parent of parents) {
+                const sendEmail = await RegisterController.mailer.send({
+                    email: parent.email,
+                    subject: 'KINGDOM KIDS 2025 - REGISTRO EXITOSO',
+                    template: 'activation',
+                    kid: updatedKidResult.kid,
+                    qrCode: url,
+                });
             }
 
             return res.status(JsonResponse.OK).json({

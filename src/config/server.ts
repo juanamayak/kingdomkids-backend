@@ -1,4 +1,6 @@
 /** Modulo que contiene las variables de desarrollo */
+
+
 require('dotenv').config()
 //require('dotenv').config({ path: '/root/envs/name_project/.env' })
 /** Librerías que nos ayudaran a crear el servidor */
@@ -14,6 +16,7 @@ import useragent from 'express-useragent'
 import InitializationRelationship from './relationships'
 import { Routes } from '../routes/routes'
 import { Database } from './database'
+import path from "path";
 
 class Server {
     /** Inicializamos los componentes primarios que correrá el servidor */
@@ -49,7 +52,10 @@ class Server {
         /** Establecemos nuestras "Referrer Policy" */
         this.app.use(helmet.referrerPolicy({ policy: 'strict-origin' }))
         this.app.use(bodyParser.json({ limit: '50mb' }))
-        this.app.use(bodyParser.urlencoded({ extended: false }))
+        this.app.use(bodyParser.urlencoded({ extended: false }));
+
+        // 👉 Aquí agregas el middleware para servir los archivos QR
+        this.app.use('/files', express.static(path.join(__dirname, '../../files')));
     }
     /** Configuramos el protocolo http a utilizar (esta configurado bajo el
      * tipo de desarrollo en que se este ejecutando)

@@ -17,14 +17,14 @@
         <!-- Contenido principal -->
         <div style="max-width: 100%; background-color: #ffffff; padding: 5%;">
             <h1 style="font-weight: bold; font-size: 1.25rem;">¡Registro Exitoso!</h1>
-            <p>Hola, {{ data.kid.name }} {{ data.kid.lastname }}, tu registro se ha realizado con éxito y ya estás listo para
+            <p>Hola, {{ data.kid }}, tu registro se ha realizado con éxito y ya estás listo para
                 disfrutar del
                 mejor tiempo en Escuela de Verano "Kingdom Kids 2025".</p>
             <p>
                 Este es el Código QR para poder registrar tu entrada cada día durante el evento:
             </p>
 
-            <img src="{{data.qrCode}}" alt="Código QR">
+            <img src="https://api.mundodefeplaya.org:3035/files/qrs/{{data.qrCode}}" alt="Código QR">
 
             <p>Al haber finalizado tu registro, confirmas que has leído y aceptado los Términos aplicables al evento.
                 Para consultarlos, por favor visita nuestro sitio web o contáctanos a través de los medios indicados. </p>

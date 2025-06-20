@@ -3,6 +3,7 @@ import QRCode from 'qrcode';
 import {File} from '../helpers/files';
 import * as ExcelJS from 'exceljs'
 import { v4 as uuidv4 } from 'uuid';
+import { SafeString } from 'handlebars'
 
 /* Queries */
 import {KidsQuery} from '../queries/kids.query';
@@ -265,8 +266,8 @@ export class RegisterController {
                     email: parent.email,
                     subject: 'KINGDOM KIDS 2025 - REGISTRO EXITOSO',
                     template: 'activation',
-                    kid: updatedKidResult.kid,
-                    qrCode: url,
+                    kid: `${kidData.name} ${kidData.lastname}`,
+                    qrCode: imageUpload.image,
                 });
             }
 

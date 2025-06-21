@@ -16,6 +16,7 @@ export class Mailer {
                 user: process.env.EMAIL_USER, // generated ethereal user
                 pass: process.env.EMAIL_PASSWORD, // generated ethereal password
             },
+            connectionTimeout: 20000, // 10 segundos
         })
 
         this.hbsConfig = {

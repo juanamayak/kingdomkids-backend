@@ -262,18 +262,13 @@ export class RegisterController {
             }
 
             for (const parent of parents) {
-                try {
-                    const sendEmail = await RegisterController.mailer.send({
-                        email: parent.email,
-                        subject: 'KINGDOM KIDS 2025 - REGISTRO EXITOSO',
-                        template: 'activation',
-                        kid: `${kidData.name} ${kidData.lastname}`,
-                        qrCode: imageUpload.image,
-                    });
-                    console.log('Resultado envío de correo:', sendEmail);
-                } catch (err) {
-                    console.log('Error enviando correo a:', parent.email, err);
-                }
+                const sendEmail = await RegisterController.mailer.send({
+                    email: parent.email,
+                    subject: 'KINGDOM KIDS 2025 - REGISTRO EXITOSO',
+                    template: 'activation',
+                    kid: `${kidData.name} ${kidData.lastname}`,
+                    qrCode: imageUpload.image,
+                });
             }
 
             return res.status(JsonResponse.OK).json({

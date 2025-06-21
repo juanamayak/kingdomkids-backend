@@ -261,7 +261,7 @@ export class RegisterController {
                 });
             }
 
-            for (const parent of parents) {
+            /*for (const parent of parents) {
                 const sendEmail = await RegisterController.mailer.send({
                     email: parent.email,
                     subject: 'KINGDOM KIDS 2025 - REGISTRO EXITOSO',
@@ -269,7 +269,7 @@ export class RegisterController {
                     kid: `${kidData.name} ${kidData.lastname}`,
                     qrCode: imageUpload.image,
                 });
-            }
+            }*/
 
             return res.status(JsonResponse.OK).json({
                 ok: true,

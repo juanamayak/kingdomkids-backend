@@ -21,11 +21,11 @@ export class Mailer {
         this.hbsConfig = {
             viewEngine: {
                 extName: '.hbs',
-                partialsDir: path.join(__dirname, './files/templates/'),
-                layoutsDir: path.join(__dirname, './files/templates/'),
+                partialsDir: path.join(__dirname, '../files/templates/'),
+                layoutsDir: path.join(__dirname, '../files/templates/'),
                 defaultLayout: ''
             },
-            viewPath: path.join(__dirname, './files/templates/'),
+            viewPath: path.join(__dirname, '../files/templates/'),
             extName: '.hbs'
         };
     }

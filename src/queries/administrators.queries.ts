@@ -6,7 +6,7 @@ export class AdministratorsQueries {
         try {
             const administrator = await AdministratorModel.findOne({
                 where: {
-                    username: data.usuario
+                    username: data.username
                 }
             })
             return {ok: true, administrator}

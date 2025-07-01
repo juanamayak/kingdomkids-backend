@@ -15,8 +15,8 @@ export class SessionController {
         const body = req.body
         const errors = []
 
-        const usuario: string = body.usuario == null ?
-            errors.push({message: 'Favor de proporcionar el nombre de usuario.'}) : body.usuario
+        const username: string = body.username == null ?
+            errors.push({message: 'Favor de proporcionar el nombre de usuario.'}) : body.username
 
         const password: string = body.password == null ?
             errors.push({message: 'Favor de proporcionar la contraseña.'}) : body.password
@@ -28,7 +28,7 @@ export class SessionController {
             });
         }
 
-        const administrator = await SessionController.administratorsQueries.findAdministradorByUsuario({usuario});
+        const administrator = await SessionController.administratorsQueries.findAdministradorByUsuario({username});
 
         const adminPass = administrator.administrator ? administrator.administrator.password : '';
         if (!administrator.ok) {

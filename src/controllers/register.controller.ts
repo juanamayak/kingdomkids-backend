@@ -41,9 +41,9 @@ export class RegisterController {
 
     public async index(req: Request, res: Response) {
 
-        const registers = await RegisterController.kidsQuery.index();
+        const kidsResult = await RegisterController.kidsQuery.index();
 
-        if (!registers.ok) {
+        if (!kidsResult.ok) {
             return res.status(400).json({
                 ok: false,
                 message: 'No se encontro el registro solicitado'
@@ -52,7 +52,7 @@ export class RegisterController {
 
         return res.status(200).json({
             ok: true,
-            registers: registers.registers,
+            kids: kidsResult.kids,
         });
     }
 

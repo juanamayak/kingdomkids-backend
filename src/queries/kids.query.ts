@@ -35,15 +35,8 @@ export class KidsQuery {
 
     public async index() {
         try {
-            const registers = await KidsModel.findAll({
-                include: [
-                    {
-                        model: CheckInAndOutModel,
-                        order: [['createdAt', 'DESC']]
-                    }
-                ]
-            });
-            return {ok: true, registers}
+            const kids = await KidsModel.findAll();
+            return {ok: true, kids}
         } catch (e) {
             console.log(e);
             return {ok: false}

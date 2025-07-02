@@ -2,6 +2,8 @@ import {Op} from 'sequelize';
 import {KidsModel} from '../models/kids.model';
 import {CheckInAndOutModel} from "../models/checkin_and_out.model";
 import moment from "moment";
+import {ParentsModel} from "../models/parents.model";
+import {AuthorizedModel} from "../models/authorized.model";
 
 export class KidsQuery {
 
@@ -35,7 +37,18 @@ export class KidsQuery {
 
     public async index() {
         try {
-            const kids = await KidsModel.findAll();
+            const kids = await KidsModel.findAll(
+                {
+                    include: [
+                        {
+                            model: ParentsModel, as: 'parents'
+                        },
+                        {
+                            model: AuthorizedModel, as: 'authorized'
+                        }
+                    ]
+                }
+            );
             return {ok: true, kids}
         } catch (e) {
             console.log(e);

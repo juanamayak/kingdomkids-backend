@@ -64,7 +64,7 @@ export class RegisterController {
         if (!register.ok) {
             return res.status(400).json({
                 ok: false,
-                message: 'No se encontro el registro solicitado',
+                errors: [{ message: 'No se encontro el registro solicitado.' }],
             });
         }
 
@@ -74,7 +74,7 @@ export class RegisterController {
         if (!qr.ok) {
             return res.status(400).json({
                 ok: false,
-                message: 'Existen problemas al descargar el archivo QR',
+                errors: [{ message: 'Existen problemas al obtener el Código QR' }],
             });
         }
 

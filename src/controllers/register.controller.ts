@@ -298,9 +298,12 @@ export class RegisterController {
             });
         }
 
+        console.log(registers.registers[0]);
+
         const registersData = [];
 
         for (const element of registers.registers) {
+
             const data = {
                 id: element.id,
                 name: element.name,
@@ -312,7 +315,19 @@ export class RegisterController {
                 medical_condition_description: element.medical_condition_description,
                 mdf_member: element.mdf_member,
                 another_church_name: element.another_church_name,
-                invite_name: element.invite_name
+                invite_name: element.invite_name,
+                mother_name: element['parents'][0].full_name,
+                mother_email: element['parents'][0].email,
+                mother_cellphone: element['parents'][0].cellphone,
+                father_name: element['parents'][1].full_name,
+                father_email: element['parents'][1].email,
+                father_cellphone: element['parents'][1].cellphone,
+                auth_person_one_name: element['authorized'][0]?.full_name,
+                auth_person_one_cellphone: element['authorized'][0]?.cellphone,
+                auth_person_one_relationship: element['authorized'][0]?.relationship,
+                auth_person_two_name: element['authorized'][0]?.full_name,
+                auth_person_two_cellphone: element['authorized'][0]?.cellphone,
+                auth_person_two_relationship: element['authorized'][0]?.relationship
             };
             console.log(data);
             registersData.push(data);
@@ -355,6 +370,18 @@ export class RegisterController {
             'MIEMBRO MDF',
             'NOMBRE DE IGLESIA',
             '¿QUIEN LO INVITO?',
+            'MAMA',
+            'CORREO MAMA',
+            'CELULAR MAMA',
+            'PAPA',
+            'CORREO PAPA',
+            'CELULAR PAPA',
+            'PERSONA AUTORIZADA 1',
+            'PERSONA AUTORIZADA 1 CELULAR',
+            'PERSONA AUTORIZADA 1 RELACIÓN',
+            'PERSONA AUTORIZADA 2',
+            'PERSONA AUTORIZADA 2 CELULAR',
+            'PERSONA AUTORIZADA 2 RELACIÓN'
         ];
         worksheet.getRow(1).font = { bold: true };
         worksheet.getRow(1).alignment = { horizontal: 'center' };
@@ -372,6 +399,18 @@ export class RegisterController {
             { key: 'mdf_member', width: 16 },
             { key: 'another_church_name', width: 16 },
             { key: 'invite_name', width: 16 },
+            { key: 'mother_name', width: 16 },
+            { key: 'mother_email', width: 16 },
+            { key: 'mother_cellphone', width: 16 },
+            { key: 'father_name', width: 16 },
+            { key: 'father_email', width: 16 },
+            { key: 'father_cellphone', width: 16 },
+            { key: 'auth_person_one_name', width: 16 },
+            { key: 'auth_person_one_cellphone', width: 16 },
+            { key: 'auth_person_one_relationship', width: 16 },
+            { key: 'auth_person_two_name', width: 16 },
+            { key: 'auth_person_two_cellphone', width: 16 },
+            { key: 'auth_person_two_relationship', width: 16 }
         ];
 
         worksheet.getColumn('A').alignment = { horizontal: 'center' };
@@ -410,7 +449,19 @@ export class RegisterController {
             medical_condition_description: n.medical_condition_description,
             mdf_member: n.mdf_member == 1 ? 'Si' : 'No',
             another_church_name: n.another_church_name,
-            invite_name: n.invite_name
+            invite_name: n.invite_name,
+            mother_name: n.mother_name,
+            mother_email: n.mother_email,
+            mother_cellphone: n.mother_cellphone,
+            father_name: n.father_name,
+            father_email: n.father_email,
+            father_cellphone: n.father_cellphone,
+            auth_person_one_name: n.auth_person_one_name,
+            auth_person_one_cellphone: n.auth_person_one_cellphone,
+            auth_person_one_relationship: n.auth_person_one_relationship,
+            auth_person_two_name: n.auth_person_two_name,
+            auth_person_two_cellphone: n.auth_person_two_cellphone,
+            auth_person_two_relationship: n.auth_person_two_relationship
         }));
 
         worksheet.addRows(mapped);

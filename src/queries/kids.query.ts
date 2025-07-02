@@ -88,7 +88,15 @@ export class KidsQuery {
             const registers = await KidsModel.findAll({
                 where: {
                     age
-                }
+                },
+                include: [
+                    {
+                        model: ParentsModel, as: 'parents'
+                    },
+                    {
+                        model: AuthorizedModel, as: 'authorized'
+                    }
+                ]
             });
             return {ok: true, registers}
         } catch (e) {

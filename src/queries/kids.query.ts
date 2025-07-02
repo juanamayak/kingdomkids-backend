@@ -74,14 +74,8 @@ export class KidsQuery {
         try {
             const registers = await KidsModel.findAll({
                 where: {
-                    kid_age: age
-                },
-                include: [
-                    {
-                        model: CheckInAndOutModel,
-                        order: [['createdAt', 'DESC']]
-                    }
-                ]
+                    age
+                }
             });
             return {ok: true, registers}
         } catch (e) {

@@ -32,6 +32,6 @@ export class Routes {
         app.route('/api/checkinAndOut/checkout/:id').put(this.checkinAndOutController.checkout);
 
         /* Reportes de niños por edades */
-        // app.route('/api/reports/:age').get(this.registerController.excelByAge);
+        app.route('/api/reports/:age').get(this.registerController.excelByAge);
     }
 }

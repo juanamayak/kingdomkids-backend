@@ -26,7 +26,15 @@ export class KidsQuery {
             const register = await KidsModel.findOne({
                 where: {
                     id: registerId
-                }
+                },
+                include: [
+                    {
+                        model: ParentsModel, as: 'parents'
+                    },
+                    {
+                        model: AuthorizedModel, as: 'authorized'
+                    }
+                ]
             })
             return {ok: true, register}
         } catch (e) {

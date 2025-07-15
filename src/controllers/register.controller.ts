@@ -35,7 +35,7 @@ export class RegisterController {
 
         return res.status(200).json({
             ok: true,
-            register: register.register,
+            kid: register.register,
         });
     }
 

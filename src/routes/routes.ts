@@ -28,7 +28,7 @@ export class Routes {
         app.route('/api/checkinAndOut/index').get(this.checkinAndOutController.indexToday);
         app.route('/api/checkinAndOut/index/:register_id').get(this.checkinAndOutController.indexByRegister);
         app.route('/api/checkinAndOut/:id').get(this.checkinAndOutController.showByRegister);
-        app.route('/api/checkinAndOut/checkin').post(this.checkinAndOutController.checkin);
+        app.route('/api/checkin').post(this.checkinAndOutController.checkin);
         app.route('/api/checkinAndOut/checkout/:id').put(this.checkinAndOutController.checkout);
 
         /* Reportes de niños por edades */

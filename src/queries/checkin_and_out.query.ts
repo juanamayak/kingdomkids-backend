@@ -61,13 +61,7 @@ export class CheckinAndOutQuery {
 
     public async checkin(data: any) {
         try {
-            const record = {
-                register_id: data.register_id,
-                checkin_date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                status: 1,
-                createdAt: moment().format('YYYY-MM-DD HH:mm:ss')
-            }
-            const checkin = await CheckInAndOutModel.create(record);
+            const checkin = await CheckInAndOutModel.create(data);
             return {ok: true, checkin}
         } catch (e) {
             console.log(e);

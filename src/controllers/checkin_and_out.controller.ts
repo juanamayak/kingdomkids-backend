@@ -1,9 +1,7 @@
 import {Response, Request} from 'express'
-import {JsonResponse} from "../enums/json-response";
 import {CheckinAndOutQuery} from "../queries/checkin_and_out.query";
-import QRCode from "qrcode";
 import moment from "moment";
-
+import { v4 as uuidv4 } from 'uuid';
 
 export class CheckinAndOutController {
 
@@ -43,7 +41,15 @@ export class CheckinAndOutController {
 
     public async checkin(req: Request, res: Response) {
 
-        const data = req.body;
+        const body = req.body;
+
+        const data = {
+            uuid: uuidv4(),
+            kid_id: body.register_id,
+            checkin_date: moment().format('YYYY-MM-DD HH:mm:ss')
+        }
+
+        console.log(data);
 
         const checking = await CheckinAndOutController.checkinAndOutQuery.checkin(data);
 

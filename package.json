@@ -26,10 +26,10 @@
         "@types/express-useragent": "^1.0.2",
         "@types/jsonwebtoken": "^8.5.8",
         "@types/qrcode": "^1.4.2",
-        "express-fileupload": "^1.4.0",
         "typescript": "^4.6.3"
     },
     "dependencies": {
+        "express-fileupload": "^1.4.0",
         "bcrypt": "^5.0.1",
         "cors": "^2.8.5",
         "cryptr": "^6.0.3",

@@ -284,6 +284,59 @@ export class RegisterController {
         });
     }
 
+    public async excelAll(req: Request, res: Response) {
+        const registers = await RegisterController.kidsQuery.index();
+
+        if (!registers.ok) {
+            return res.status(JsonResponse.BAD_REQUEST).json({
+                ok: false,
+                errors: [{ message: 'Existen problemas al momento de obtener el reporte.' }],
+            });
+        }
+
+        const registersData = [];
+
+        for (const element of (registers.kids as any[])) {
+            registersData.push({
+                id: element.id,
+                name: element.name,
+                lastname: element.lastname,
+                birthday: element.birthday,
+                age: element.age,
+                address: element.address,
+                allergy_description: element.allergy_description,
+                medical_condition_description: element.medical_condition_description,
+                mdf_member: element.mdf_member,
+                another_church_name: element.another_church_name,
+                invite_name: element.invite_name,
+                mother_name: element['parents'][0]?.full_name,
+                mother_email: element['parents'][0]?.email,
+                mother_cellphone: element['parents'][0]?.cellphone,
+                father_name: element['parents'][1]?.full_name,
+                father_email: element['parents'][1]?.email,
+                father_cellphone: element['parents'][1]?.cellphone,
+                auth_person_one_name: element['authorized'][0]?.full_name,
+                auth_person_one_cellphone: element['authorized'][0]?.cellphone,
+                auth_person_one_relationship: element['authorized'][0]?.relationship,
+                auth_person_two_name: element['authorized'][1]?.full_name,
+                auth_person_two_cellphone: element['authorized'][1]?.cellphone,
+                auth_person_two_relationship: element['authorized'][1]?.relationship,
+            });
+        }
+
+        try {
+            const buffer = await RegisterController.generateExcel(registersData);
+            res.status(200);
+            res.contentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            return res.send(buffer);
+        } catch (e) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: 'No se puede generar Excel.' }],
+            });
+        }
+    }
+
     public async excelByAge(req: Request, res: Response) {
         const errors = [];
 
@@ -325,12 +378,89 @@ export class RegisterController {
                 auth_person_one_name: element['authorized'][0]?.full_name,
                 auth_person_one_cellphone: element['authorized'][0]?.cellphone,
                 auth_person_one_relationship: element['authorized'][0]?.relationship,
-                auth_person_two_name: element['authorized'][0]?.full_name,
-                auth_person_two_cellphone: element['authorized'][0]?.cellphone,
-                auth_person_two_relationship: element['authorized'][0]?.relationship
+                auth_person_two_name: element['authorized'][1]?.full_name,
+                auth_person_two_cellphone: element['authorized'][1]?.cellphone,
+                auth_person_two_relationship: element['authorized'][1]?.relationship
             };
             console.log(data);
             registersData.push(data);
+        }
+
+        try {
+            const buffer = await RegisterController.generateExcel(registersData);
+            res.status(200);
+            res.contentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            return res.send(buffer);
+        } catch (e) {
+            return res.status(400).json({
+                ok: false,
+                errors: [{ message: 'No se puede generar Excel.' }],
+            });
+        }
+    }
+
+    public async excelByDateRange(req: Request, res: Response) {
+        const { startDate, endDate } = req.query as { startDate?: string; endDate?: string };
+
+        if (!startDate || !endDate) {
+            return res.status(JsonResponse.BAD_REQUEST).json({
+                ok: false,
+                errors: [{ message: 'Los parámetros startDate y endDate son requeridos (formato YYYY-MM-DD).' }],
+            });
+        }
+
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
+            return res.status(JsonResponse.BAD_REQUEST).json({
+                ok: false,
+                errors: [{ message: 'Formato de fecha inválido. Use YYYY-MM-DD.' }],
+            });
+        }
+
+        const result = await RegisterController.kidsQuery.indexByDateRange(startDate, endDate);
+
+        if (!result.ok) {
+            return res.status(JsonResponse.BAD_REQUEST).json({
+                ok: false,
+                errors: [{ message: 'Existen problemas al momento de obtener el reporte.' }],
+            });
+        }
+
+        const registersData = [];
+
+        for (const element of (result.registers as any[])) {
+            registersData.push({
+                id: element.id,
+                name: element.name,
+                lastname: element.lastname,
+                birthday: element.birthday,
+                age: element.age,
+                address: element.address,
+                allergy_description: element.allergy_description,
+                medical_condition_description: element.medical_condition_description,
+                mdf_member: element.mdf_member,
+                another_church_name: element.another_church_name,
+                invite_name: element.invite_name,
+                mother_name: element['parents'][0]?.full_name,
+                mother_email: element['parents'][0]?.email,
+                mother_cellphone: element['parents'][0]?.cellphone,
+                father_name: element['parents'][1]?.full_name,
+                father_email: element['parents'][1]?.email,
+                father_cellphone: element['parents'][1]?.cellphone,
+                auth_person_one_name: element['authorized'][0]?.full_name,
+                auth_person_one_cellphone: element['authorized'][0]?.cellphone,
+                auth_person_one_relationship: element['authorized'][0]?.relationship,
+                auth_person_two_name: element['authorized'][1]?.full_name,
+                auth_person_two_cellphone: element['authorized'][1]?.cellphone,
+                auth_person_two_relationship: element['authorized'][1]?.relationship,
+            });
+        }
+
+        if (registersData.length === 0) {
+            return res.status(JsonResponse.BAD_REQUEST).json({
+                ok: false,
+                errors: [{ message: `No se encontraron registros entre ${startDate} y ${endDate}.` }],
+            });
         }
 
         try {

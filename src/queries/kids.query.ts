@@ -91,6 +91,27 @@ export class KidsQuery {
         }
     }
 
+    public async indexByDateRange(startDate: string, endDate: string) {
+        try {
+            const registers = await KidsModel.findAll({
+                where: {
+                    createdAt: {
+                        [Op.between]: [`${startDate} 00:00:00`, `${endDate} 23:59:59`],
+                    },
+                },
+                include: [
+                    { model: ParentsModel, as: 'parents' },
+                    { model: AuthorizedModel, as: 'authorized' },
+                ],
+                order: [['createdAt', 'ASC']],
+            });
+            return { ok: true, registers };
+        } catch (e) {
+            console.log(e);
+            return { ok: false };
+        }
+    }
+
     public async indexByAge(age: any){
         try {
             const registers = await KidsModel.findAll({

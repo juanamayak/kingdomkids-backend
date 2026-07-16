@@ -7,11 +7,18 @@ export class CheckinAndOutQuery {
 
     public async index() {
         try {
-            const checkins = await CheckInAndOutModel.findAll();
+            const checkins = await CheckInAndOutModel.findAll({
+                include: [{
+                    model: KidsModel,
+                    as: 'kid',
+                    attributes: ['id', 'name', 'lastname']
+                }],
+                order: [['checkin_date', 'DESC']]
+            });
             return {ok: true, checkins}
         } catch (e) {
-            console.log(e);
-            return {ok: false}
+            console.log('Error en index():', e);
+            return {ok: false, error: e}
         }
     }
 
@@ -49,7 +56,7 @@ export class CheckinAndOutQuery {
         try {
             const checkins = await CheckInAndOutModel.findAll({
                 where: {
-                    register_id: registerId
+                    kid_id: registerId
                 }
             })
             return {ok: true, checkins}

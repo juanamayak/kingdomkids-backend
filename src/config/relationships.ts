@@ -5,7 +5,8 @@ import {AuthorizedModel} from "../models/authorized.model";
 
 export default class Relationship {
     static init() {
-        KidsModel.hasMany(CheckInAndOutModel, {foreignKey: 'register_id'});
+        KidsModel.hasMany(CheckInAndOutModel, {foreignKey: 'kid_id'});
+        CheckInAndOutModel.belongsTo(KidsModel, {foreignKey: 'kid_id', as: 'kid'});
 
         KidsModel.hasMany(ParentsModel, {foreignKey: 'kid_id', as: 'parents'});
         ParentsModel.belongsTo(KidsModel, {foreignKey: 'kid_id', as: 'parents'});

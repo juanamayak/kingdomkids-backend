@@ -9,11 +9,18 @@ export class CheckinAndOutController {
 
     public async indexToday(req: Request, res: Response) {
 
-        const checkins = await CheckinAndOutController.checkinAndOutQuery.index();
+        const result = await CheckinAndOutController.checkinAndOutQuery.index();
+
+        if (!result.ok) {
+            return res.status(500).json({
+                ok: false,
+                message: 'Error al obtener check-ins del día'
+            });
+        }
 
         return res.status(200).json({
             ok: true,
-            checkins: checkins.checkins,
+            checkins: result.checkins || [],
         });
     }
 

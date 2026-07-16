@@ -29,6 +29,10 @@ CheckInAndOutModel.init({
         checkin_date: {
             type: DataTypes.DATE,
             allowNull: true
+        },
+        checkout_date: {
+            type: DataTypes.DATE,
+            allowNull: true
         }
     }, {
         sequelize: database,
